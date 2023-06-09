@@ -29,7 +29,7 @@ public class WebSecurityConfig {
         // No session will be created or used by spring security
         http.sessionManagement(mng -> mng.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-        http.authorizeHttpRequests(c ->c.requestMatchers("/api/v1/secret/new").permitAll()
+        http.authorizeHttpRequests(c ->c.requestMatchers("/api/v1/secret/new", "api/v1/secret/login").permitAll()
                 // Disallow everything else..
                 .anyRequest().authenticated());
 

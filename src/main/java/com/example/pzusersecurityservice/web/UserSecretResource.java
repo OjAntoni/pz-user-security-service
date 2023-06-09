@@ -4,6 +4,7 @@ import com.example.pzusersecurityservice.model.Roles;
 import com.example.pzusersecurityservice.model.UserSecret;
 import com.example.pzusersecurityservice.security.JwtTokenProvider;
 import com.example.pzusersecurityservice.service.UserSecurityService;
+import com.example.pzusersecurityservice.web.dto.LoginUserSecretDto;
 import com.example.pzusersecurityservice.web.dto.NewUserSecretRequestDto;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
@@ -38,9 +39,19 @@ public class UserSecretResource {
                     .build();
             UserSecret saved = userSecurityService.save(sec);
             String jwt = userSecurityService.createJWT(saved.getId().toString(), saved.getRole());
-            return new ResponseEntity<>(jwt, HttpStatus.CREATED);
+            return new ResponseEntity<>(HttpStatus.CREATED);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @GetMapping("/login")
+    public ResponseEntity<?> login(@RequestBody LoginUserSecretDto dto){
+        String jwt = userSecurityService.createJwtTokenAfterLogin(dto.getPassword(), dto.getUsername());
+        if (jwt==null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>(jwt, HttpStatus.OK);
+        }
     }
 
     @GetMapping()

@@ -30,6 +30,9 @@ public class UserSecurityService {
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
 
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public String createJWT(String userSecretId, String role){
         return jwtTokenProvider.createToken(userSecretId, List.of(role));
     }
@@ -63,5 +66,17 @@ public class UserSecurityService {
 
     public UserSecret getUserSecret(UUID id){
         return repository.findById(id).get();
+    }
+
+    public String createJwtTokenAfterLogin(String providedPassword, String username){
+        UserDetailsResponseDto u = userDetailsService.getUserDetailsByUsername(username);
+        if(u == null) return null;
+        UserSecret uSec = repository.findByDetailsId(u.getId());
+        if(uSec==null) return null;
+        if (passwordEncoder.matches(providedPassword, uSec.getPassword())) {
+            return jwtTokenProvider.createToken(uSec.getId().toString(), List.of(uSec.getRole()));
+        } else {
+            return null;
+        }
     }
 }
