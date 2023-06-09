@@ -31,7 +31,7 @@ public class GlobalExceptionHandlerController {
     }
 
     @ExceptionHandler(UsernameNotFoundException.class)
-    public ResponseEntity<?> handleUsernameNotFoundException() throws IOException {
+    public ResponseEntity<?> handleUsernameNotFoundException() {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
