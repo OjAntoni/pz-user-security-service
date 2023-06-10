@@ -44,7 +44,7 @@ public class UserSecretResource {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginUserSecretDto dto){
         String jwt = userSecurityService.createJwtTokenAfterLogin(dto.getPassword(), dto.getUsername());
         if (jwt==null) {
